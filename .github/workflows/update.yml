@@ -1,0 +1,82 @@
+# Keeps bucket/ssp.json on the latest release of sub-screen-player: checks every hour (or when
+# run by hand, optionally for a given tag), installs the new manifest with Scoop on Windows x64
+# and ARM64, and commits it only when both work.
+name: Update
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release to use, e.g. v0.5.1 (default the latest)
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update
+  cancel-in-progress: false
+
+jobs:
+  manifest:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.write.outputs.changed }}
+      version: ${{ steps.write.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: write
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          sh update.sh $TAG
+          echo "version=$(jq -r .version bucket/ssp.json)" >> "$GITHUB_OUTPUT"
+          if git diff --quiet; then echo "changed=false"; else echo "changed=true"; fi >> "$GITHUB_OUTPUT"
+      - if: steps.write.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: manifest
+          path: bucket/ssp.json
+
+  test:
+    needs: manifest
+    if: needs.manifest.outputs.changed == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, windows-11-arm]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: manifest
+      - name: Install with Scoop
+        shell: pwsh
+        run: |
+          Invoke-RestMethod https://get.scoop.sh -OutFile install-scoop.ps1
+          # The runner's user is an administrator, which Scoop refuses unless told.
+          .\install-scoop.ps1 -RunAsAdmin
+          $env:PATH = "$HOME\scoop\shims;$env:PATH"
+          scoop install .\ssp.json
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          ssp --version
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+
+  commit:
+    needs: [manifest, test]
+    if: needs.manifest.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: manifest
+          path: bucket
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bucket/ssp.json
+          git commit -m "ssp ${{ needs.manifest.outputs.version }}"
+          git push

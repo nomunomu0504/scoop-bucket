@@ -1,0 +1,39 @@
+{
+    "version": "0.5.0",
+    "description": "Shows clocks, dashboards, web pages and videos on USB bar displays",
+    "homepage": "https://subscreen.dev",
+    "license": "MIT|Apache-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/nomunomu0504/sub-screen-player/releases/download/v0.5.0/ssp-v0.5.0-x86_64-pc-windows-msvc.zip",
+            "hash": "facfacd2d582be36c21d1199036789bd300096b6bd06bc58fd9413ae80ff09f7",
+            "extract_dir": "ssp-v0.5.0-x86_64-pc-windows-msvc"
+        },
+        "arm64": {
+            "url": "https://github.com/nomunomu0504/sub-screen-player/releases/download/v0.5.0/ssp-v0.5.0-aarch64-pc-windows-msvc.zip",
+            "hash": "b094935c16856cb258ec142b1d846009d5d01daa466b7bc5c9bd94a14ad4526f",
+            "extract_dir": "ssp-v0.5.0-aarch64-pc-windows-msvc"
+        }
+    },
+    "bin": "ssp.exe",
+    "notes": [
+        "To start the daemon now and whenever you sign in: ssp service install",
+        "Before updating ssp, end the daemon (taskkill /im ssp.exe); afterwards run ssp service install again."
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/nomunomu0504/sub-screen-player/releases/download/v$version/ssp-v$version-x86_64-pc-windows-msvc.zip",
+                "extract_dir": "ssp-v$version-x86_64-pc-windows-msvc"
+            },
+            "arm64": {
+                "url": "https://github.com/nomunomu0504/sub-screen-player/releases/download/v$version/ssp-v$version-aarch64-pc-windows-msvc.zip",
+                "extract_dir": "ssp-v$version-aarch64-pc-windows-msvc"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/SHA256SUMS.txt"
+        }
+    }
+}
