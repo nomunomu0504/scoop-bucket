@@ -1,18 +1,18 @@
 {
-    "version": "0.5.1",
+    "version": "0.6.0",
     "description": "Shows clocks, dashboards, web pages and videos on USB bar displays",
     "homepage": "https://subscreen.dev",
     "license": "MIT|Apache-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/nomunomu0504/sub-screen-player/releases/download/v0.5.1/ssp-v0.5.1-x86_64-pc-windows-msvc.zip",
-            "hash": "1b170253e1231675e2930adbcabc35534a1150bb055803d11949f8897ae91529",
-            "extract_dir": "ssp-v0.5.1-x86_64-pc-windows-msvc"
+            "url": "https://github.com/nomunomu0504/sub-screen-player/releases/download/v0.6.0/ssp-v0.6.0-x86_64-pc-windows-msvc.zip",
+            "hash": "460e5c366f974a4a95b7c747087fe5035ef724a68b63e1dd66a2b5466cdb37f7",
+            "extract_dir": "ssp-v0.6.0-x86_64-pc-windows-msvc"
         },
         "arm64": {
-            "url": "https://github.com/nomunomu0504/sub-screen-player/releases/download/v0.5.1/ssp-v0.5.1-aarch64-pc-windows-msvc.zip",
-            "hash": "b9a4390d5f1a715982e3ad95d4393f2ec9d9b17378e8cf23487706a7bd65a4bd",
-            "extract_dir": "ssp-v0.5.1-aarch64-pc-windows-msvc"
+            "url": "https://github.com/nomunomu0504/sub-screen-player/releases/download/v0.6.0/ssp-v0.6.0-aarch64-pc-windows-msvc.zip",
+            "hash": "180d9c2f76acaa2c92b2c003aecf79d9ec1c2ea5b3b26010ac1f5f09f4d5fef0",
+            "extract_dir": "ssp-v0.6.0-aarch64-pc-windows-msvc"
         }
     },
     "bin": "ssp.exe",
